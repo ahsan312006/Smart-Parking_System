@@ -1,23 +1,50 @@
 #include <iostream>
-#include "../core/ParkingArea.h"
-#include "../core/ParkingSlot.h"
+#include <string>
+#include "ParkingSystem.h"
+
+void showMenu() {
+    std::cout << "\n=== Smart Parking System ===\n";
+    std::cout << "1. Park Vehicle\n";
+    std::cout << "2. Release Slot\n";
+    std::cout << "3. Display Status\n";
+    std::cout << "4. Exit\n";
+    std::cout << "Choice: ";
+}
 
 int main() {
-    ParkingArea area(1);
-
-    area.addSlot(new ParkingSlot(1));
-    area.addSlot(new ParkingSlot(2));
-    area.addSlot(new ParkingSlot(3));
+    ParkingSystem system;
+    system.initialize();
 
     int choice;
-    std::cout << "Enter slot number to park (1-3): ";
-    std::cin >> choice;
+    std::string vehicleId;
+    int typeChoice;
+    int slotId;
 
-    if (choice >= 1 && choice <= 3) {
-        area.showSlots();
-        std::cout << "\nParking vehicle in slot " << choice << std::endl;
-    } else {
-        std::cout << "Invalid slot number!" << std::endl;
+    while (true) {
+        showMenu();
+        if (!(std::cin >> choice)) break;
+
+        switch (choice) {
+            case 1:
+                std::cout << "Enter Vehicle ID: ";
+                std::cin >> vehicleId;
+                std::cout << "Enter Vehicle Type (0:Car, 1:Bike, 2:Bus): ";
+                std::cin >> typeChoice;
+                system.processRequest(vehicleId, static_cast<VehicleType>(typeChoice), 60);
+                break;
+            case 2:
+                std::cout << "Enter Slot ID to release: ";
+                std::cin >> slotId;
+                system.releaseSlot(slotId);
+                break;
+            case 3:
+                system.displayStatus();
+                break;
+            case 4:
+                return 0;
+            default:
+                std::cout << "Invalid choice!\n";
+        }
     }
 
     return 0;
